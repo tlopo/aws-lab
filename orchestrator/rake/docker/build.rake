@@ -15,7 +15,6 @@ end
 
 desc('Build docker image')
 task :build_force do
-  p 'hi'
   Dir.chdir("#{File.dirname(DOCKERFILE)}/")
   cmd = "docker build  -t #{IMAGE_NAME}:0.0.1 -t #{IMAGE_NAME}:latest ."
   success = RunCmdLiveOutput.new(cmd).run

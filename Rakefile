@@ -5,9 +5,14 @@ require 'logger'
 LOGGER = Logger.new STDOUT
 
 require "#{RAKE_DIR}/lib/run_cmd_live_output"
+require "#{RAKE_DIR}/lib/docker_run"
 
 DOCKERFILE = File.expand_path "#{RAKE_DIR}/../docker/Dockerfile"
 IMAGE_NAME = 'aws-lab-orchestrator'.freeze
+
+task :default do
+  puts `rake -sT`
+end
 
 Dir.chdir RAKE_DIR
 payload = []

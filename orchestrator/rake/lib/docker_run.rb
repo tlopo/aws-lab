@@ -1,0 +1,23 @@
+require 'fileutils'
+
+# Run commands against orchestrator container
+class Docker
+  AWS_CACHE = "#{PROJECT_DIR}/.aws".freeze
+
+  def self.run(cmd)
+    FileUtils.mkdir_p(AWS_CACHE)
+    ts = Time.now.strftime('%s.%N')
+    tmpfile = "#{PROJECT_DIR}/.script-#{ts}.sh"
+    File.open(tmpfile, 'w+') { |f| f.write(cmd) }
+    docker_cmd = [
+      'docker run -it --rm',
+      "-v #{AWS_CACHE}:/root/.aws",
+      "-v #{tmpfile}:/tmp/#{tmpfile}",
+      IMAGE_NAME.to_s,
+      %(bash "/tmp/#{tmpfile}")
+    ]
+    result = RunCmdLiveOutput.new(docker_cmd.join(' ')).run
+    File.delete(tmpfile)
+    result
+  end
+end
