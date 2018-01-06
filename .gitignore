@@ -1,6 +1,7 @@
 .vagrant
 /cookbooks
 
+.dyn-tasks
 # Bundler
 bin/*
 .bundle/*

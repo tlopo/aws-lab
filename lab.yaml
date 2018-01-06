@@ -1,0 +1,18 @@
+aws: 
+  region: 
+  vpc:
+    name: 
+    cidr:
+    public_ports:
+      tcp:
+      udp:
+    instances:
+      - name:
+        type:
+        tags: 
+          - name: 
+          - role:
+          - env: 
+        chef: 
+          recipes:
+            - install_docker            
