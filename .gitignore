@@ -2,6 +2,7 @@
 /cookbooks
 
 .aws/* 
+.terraform/* 
 .dyn-tasks
 # Bundler
 bin/*

@@ -2,10 +2,13 @@ PROJECT_DIR = __dir__.to_s
 RAKE_DIR = File.expand_path "#{PROJECT_DIR}/orchestrator/rake"
 
 require 'logger'
+require 'rake/testtask'
 LOGGER = Logger.new STDOUT
 
 require "#{RAKE_DIR}/lib/run_cmd_live_output"
 require "#{RAKE_DIR}/lib/docker_run"
+require "#{RAKE_DIR}/lib/terraform"
+require "#{RAKE_DIR}/lib/rake_argv_consumer"
 
 DOCKERFILE = File.expand_path "#{RAKE_DIR}/../docker/Dockerfile"
 IMAGE_NAME = 'aws-lab-orchestrator'.freeze

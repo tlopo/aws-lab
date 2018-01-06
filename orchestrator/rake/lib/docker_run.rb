@@ -3,6 +3,7 @@ require 'fileutils'
 # Run commands against orchestrator container
 class Docker
   AWS_CACHE = "#{PROJECT_DIR}/.aws".freeze
+  TF_DIR = "#{PROJECT_DIR}/.terraform".freeze
 
   def self.run(cmd)
     FileUtils.mkdir_p(AWS_CACHE)
@@ -12,9 +13,10 @@ class Docker
     docker_cmd = [
       'docker run -it --rm',
       "-v #{AWS_CACHE}:/root/.aws",
-      "-v #{tmpfile}:/tmp/#{tmpfile}",
+      "-v #{TF_DIR}:/root/terraform",
+      "-v #{tmpfile}:/tmp/#{File.basename(tmpfile)}",
       IMAGE_NAME.to_s,
-      %(bash "/tmp/#{tmpfile}")
+      %(bash "/tmp/#{File.basename(tmpfile)}")
     ]
     result = RunCmdLiveOutput.new(docker_cmd.join(' ')).run
     File.delete(tmpfile)

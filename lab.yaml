@@ -1,8 +1,8 @@
 aws: 
-  region: 
+  region: us-east-1 
   vpc:
-    name: 
-    cidr:
+    name: lab
+    cidr: 10.0.0.0/24
     public_ports:
       tcp:
       udp:
