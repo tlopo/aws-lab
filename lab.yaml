@@ -4,16 +4,11 @@ aws:
   vpc:
     name: lab
     cidr: 192.168.50.0/24
-    public_ports:
-      tcp:
-      udp:
-    instances:
-      - name:
-        type:
-        tags: 
-          - name: 
-          - role:
-          - env: 
-        chef: 
-          recipes:
-            - install_docker            
+  instances:
+    - name: simple-test
+      type: t2.micro
+      tags: 
+        - Role: web-app 
+      chef: 
+        recipes:
+          - install_docker            

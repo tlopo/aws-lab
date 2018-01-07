@@ -67,5 +67,5 @@ resource "aws_vpc_dhcp_options" "dns_resolver" {
     domain_name_servers = ["8.8.8.8", "8.8.4.4"]
 }
 
-output "vpc-id" { value = "${aws_vpc.vpc.id}" }
-output "net-id" { value = "${aws_subnet.default.id}" }
+output "vpc_id" { value = "${aws_vpc.vpc.id}" }
+output "net_id" { value = "${aws_subnet.default.id}" }
