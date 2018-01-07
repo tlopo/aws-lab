@@ -14,11 +14,23 @@ class Terraform
         version = "1.6"
       }
 
+      variable "environment" {}
+      variable "cidr" {}
+
       module "net" {
         source = "./modules/net"
+        environment = "${var.environment}"
+        cidr = "${var.cidr}"
       }
     CFG
+
+    vars = <<-VARS.gsub(/^ {6}/, '')
+      environment = "#{MANIFEST['environment']}"
+      cidr = "#{MANIFEST['aws']['vpc']['cidr']}"
+    VARS
+
     File.open("#{TF_DIR}/lab.tf", 'w+') { |f| f.write(cfg) }
+    File.open("#{TF_DIR}/terraform.tfvars", 'w+') { |f| f.write(vars) }
     Docker.run('cd /root/terraform && terraform init')
   end
 end
