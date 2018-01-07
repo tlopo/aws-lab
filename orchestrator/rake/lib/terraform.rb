@@ -38,6 +38,7 @@ class Terraform
         net_id: '${module.net.net_id}',
         type: (i['type']).to_s,
         name: (i['name']).to_s,
+        private_ip: (i['private_ip']).to_s,
         key_name: key_name
       )
       cfg = "#{cfg}\n#{vm}"
@@ -69,6 +70,7 @@ class Terraform
     type = opts[:type]
     name = opts[:name]
     key_name = opts[:key_name]
+    private_ip = opts[:private_ip]
     <<-CFG.gsub(/^ {6}/, '')
       module "vm-#{name}" {
         source = "./modules/vm"
@@ -77,6 +79,7 @@ class Terraform
         name = "#{name}"
         type = "#{type}"
         key_name = "#{key_name}"
+        private_ip = "#{private_ip}"
       }
     CFG
   end

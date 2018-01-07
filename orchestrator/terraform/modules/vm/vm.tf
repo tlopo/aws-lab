@@ -15,6 +15,7 @@ data "aws_ami" "ami" {
 }
 
 variable "type" { default = "t2.micro" }
+variable "private_ip" { default = "" }
 variable "net_id" {}
 variable "environment" {}
 variable "name" {}
@@ -26,6 +27,7 @@ resource "aws_instance" "vm" {
   instance_type = "${var.type}"
   subnet_id = "${var.net_id}"
   key_name = "${var.key_name}"
+  private_ip = "${var.private_ip}"
   tags = {
     Name = "${var.name}"
   }
