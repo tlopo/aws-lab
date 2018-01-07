@@ -3,6 +3,8 @@
 
 .aws/* 
 .terraform/* 
+.ssh/*
+ 
 .dyn-tasks
 # Bundler
 bin/*

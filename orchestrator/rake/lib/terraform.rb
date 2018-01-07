@@ -1,4 +1,5 @@
 require 'yaml'
+require 'English'
 
 # Terraform helper
 class Terraform
@@ -8,6 +9,9 @@ class Terraform
     FileUtils.mkdir_p(TF_DIR.to_s)
     FileUtils.rm_rf("#{TF_DIR}/modules")
     FileUtils.cp_r("#{PROJECT_DIR}/orchestrator/terraform/modules", TF_DIR)
+    gen_key
+    pub_key = File.read("#{PROJECT_DIR}/.ssh/id_rsa.pub").strip
+    key_name = 'aws-lab'
     cfg = <<-CFG.gsub(/^ {6}/, '')
       provider "aws" {
         region = "#{MANIFEST['aws']['region']}"
@@ -16,6 +20,11 @@ class Terraform
 
       variable "environment" {}
       variable "cidr" {}
+
+      resource "aws_key_pair" "#{key_name}" {
+        key_name = "#{key_name}"
+        public_key = "#{pub_key}"
+      }
 
       module "net" {
         source = "./modules/net"
@@ -28,9 +37,9 @@ class Terraform
       vm = get_vm_cfg(
         net_id: '${module.net.net_id}',
         type: (i['type']).to_s,
-        name: (i['name']).to_s
+        name: (i['name']).to_s,
+        key_name: key_name
       )
-      p [vm]
       cfg = "#{cfg}\n#{vm}"
     end
 
@@ -44,10 +53,22 @@ class Terraform
     Docker.run('cd /root/terraform && terraform init')
   end
 
+  def self.gen_key
+    dir = "#{PROJECT_DIR}/.ssh"
+    FileUtils.mkdir_p(dir)
+    file = "#{dir}/id_rsa"
+    return if File.exist?(file)
+
+    cmd = "ssh-keygen -f #{file} -P ''"
+    `#{cmd}`
+    raise "Failed to create '#{file}'" unless $CHILD_STATUS.success?
+  end
+
   def self.get_vm_cfg(opts = {})
     net_id = opts[:net_id]
     type = opts[:type]
     name = opts[:name]
+    key_name = opts[:key_name]
     <<-CFG.gsub(/^ {6}/, '')
       module "vm-#{name}" {
         source = "./modules/vm"
@@ -55,6 +76,7 @@ class Terraform
         net_id = "#{net_id}"
         name = "#{name}"
         type = "#{type}"
+        key_name = "#{key_name}"
       }
     CFG
   end

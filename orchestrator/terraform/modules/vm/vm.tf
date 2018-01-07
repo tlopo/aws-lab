@@ -18,11 +18,14 @@ variable "type" { default = "t2.micro" }
 variable "net_id" {}
 variable "environment" {}
 variable "name" {}
+variable "key_name" {}
 
 resource "aws_instance" "vm" { 
   ami = "${data.aws_ami.ami.id}"
+  associate_public_ip_address = true
   instance_type = "${var.type}"
   subnet_id = "${var.net_id}"
+  key_name = "${var.key_name}"
   tags = {
     Name = "${var.name}"
   }
