@@ -12,6 +12,8 @@ class Docker
     File.open(tmpfile, 'w+') { |f| f.write(cmd) }
     docker_cmd = [
       'docker run -it --rm',
+      "-v #{PROJECT_DIR}/.berkshelf:/root/.berkshelf",
+      "-v #{PROJECT_DIR}/.chef:/root/.chef",
       "-v #{PROJECT_DIR}/.ssh:/root/.ssh",
       "-v #{AWS_CACHE}:/root/.aws",
       "-v #{TF_DIR}:/root/terraform",

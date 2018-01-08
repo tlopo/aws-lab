@@ -20,4 +20,9 @@ aws:
         - Role: web-app 
       chef: 
         recipes:
-          - install_docker            
+          - install_docker
+chef:
+  berks:
+    - cookbook: k8s-cb 
+      git: https://github.com/tlopo/k8s-cb.git
+      tag: 0.0.2

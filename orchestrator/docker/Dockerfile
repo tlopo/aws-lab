@@ -1,9 +1,10 @@
 # Dockerfile
 FROM ubuntu:16.04
 
-ENV DEBIAN_FRONTEND noninteractive 
-ENV PACKER_VERSION 1.1.3
-ENV TERRAFORM_VERSION 0.11.1
+ENV DEBIAN_FRONTEND=noninteractive\
+    PACKER_VERSION=1.1.3\
+    TERRAFORM_VERSION=0.11.1\
+    CHEFDK_VERSION=2.4.17 
 
 RUN apt-get update && apt-get install -y \ 
     build-essential \ 
@@ -37,5 +38,8 @@ RUN cd /tmp && curl -sfo terraform.zip https://releases.hashicorp.com/terraform/
     unzip terraform.zip &&\
     mv terraform /usr/bin  &&\
     rm terraform.zip
+
+RUN cd /tmp && curl -o chefdk.deb https://packages.chef.io/files/stable/chefdk/${CHEFDK_VERSION}/ubuntu/16.04/chefdk_${CHEFDK_VERSION}-1_amd64.deb &&\
+    dpkg -i chefdk.deb &&  rm chefdk.deb
 
 RUN apt-get install -y python-pip && pip install awscli

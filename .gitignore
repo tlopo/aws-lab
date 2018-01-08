@@ -4,6 +4,8 @@
 .aws/* 
 .terraform/* 
 .ssh/*
+.chef/*
+.berkshelf/*
  
 .dyn-tasks
 # Bundler
