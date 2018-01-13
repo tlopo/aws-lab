@@ -14,7 +14,7 @@ aws:
         recipes:
           - install_docker            
     - name: lab-vm-02
-      #private_ip: 192.168.50.3 
+      private_ip: 192.168.50.6 
       type: t2.micro
       tags: 
         - Role: web-app 
