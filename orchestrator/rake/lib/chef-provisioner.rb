@@ -18,7 +18,7 @@ class ChefProvisioner
     script = [
       'set -x',
       "cd #{dst}/.chef",
-      'rpm -q chef || {curl -L https://www.opscode.com/chef/install.sh | sudo bash}',
+      'rpm -q chef || curl -L https://www.opscode.com/chef/install.sh | bash ',
       'sudo mkdir -p /var/chef/nodes',
       '/opt/chef/bin/chef-solo -L /dev/stdout \\',
       " -l #{log_level} -j $PWD/nodes.json --recipe-url $PWD/1.tgz -o #{runlist}"
