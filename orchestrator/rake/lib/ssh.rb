@@ -45,8 +45,8 @@ class SSH
 
   def self.scp(host, src, dst)
     user = 'ec2-user'
-    ['host','src','dst'].each do |var|
-      raise "'#{var}' must be specified" unless binding.local_variable_get var
+    %w[host src dst].each do |var|
+      raise "'#{var}' must be specified" unless binding.local_variable_get(var)
     end
     cmd = "rsync -av -e 'ssh -l #{user} #{SSH_OPTS.join(' ')}' '#{src}' '#{ip_get(host)}:#{dst}'"
     Docker.run(cmd)

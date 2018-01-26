@@ -16,7 +16,7 @@ require "#{RAKE_DIR}/lib/rake_argv_consumer"
 DOCKERFILE = File.expand_path "#{RAKE_DIR}/../docker/Dockerfile"
 IMAGE_NAME = 'aws-lab-orchestrator'.freeze
 
-#ChefProvisioner.provision 'lab-vm-01'; exit 1 
+# ChefProvisioner.provision 'lab-vm-01'; exit 1
 
 task :default do
   puts `rake -sT`
