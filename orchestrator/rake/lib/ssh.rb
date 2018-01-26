@@ -43,6 +43,15 @@ class SSH
     Docker.run(cmd)
   end
 
+  def self.scp(host, src, dst)
+    user = 'ec2-user'
+    ['host','src','dst'].each do |var|
+      raise "'#{var}' must be specified" unless binding.local_variable_get var
+    end
+    cmd = "rsync -av -e 'ssh -l #{user} #{SSH_OPTS.join(' ')}' '#{src}' '#{ip_get(host)}:#{dst}'"
+    Docker.run(cmd)
+  end
+
   def self.ip_get(host)
     public_ip = nil
     vms_get.each do |vm|
