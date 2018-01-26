@@ -10,12 +10,13 @@ require "#{RAKE_DIR}/lib/docker_run"
 require "#{RAKE_DIR}/lib/terraform"
 require "#{RAKE_DIR}/lib/ssh"
 require "#{RAKE_DIR}/lib/chef"
+require "#{RAKE_DIR}/lib/chef-provisioner"
 require "#{RAKE_DIR}/lib/rake_argv_consumer"
 
 DOCKERFILE = File.expand_path "#{RAKE_DIR}/../docker/Dockerfile"
 IMAGE_NAME = 'aws-lab-orchestrator'.freeze
 
-# Chef.package_cookbook; exit 1
+#ChefProvisioner.provision 'lab-vm-01'; exit 1 
 
 task :default do
   puts `rake -sT`

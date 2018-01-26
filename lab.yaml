@@ -22,6 +22,12 @@ aws:
         recipes:
           - install_docker
 chef:
+  roles:
+    - web-app:
+        runlist: 
+          - k8s-cb::default
+  attributes:
+    foo: bar
   berks:
     - cookbook: k8s-cb 
       git: https://github.com/tlopo/k8s-cb.git
