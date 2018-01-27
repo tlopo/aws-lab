@@ -23,6 +23,7 @@ class ChefProvisioner
       '/opt/chef/bin/chef-solo -L /dev/stdout \\',
       " -l #{log_level} -j $PWD/nodes.json --recipe-url $PWD/1.tgz -o #{runlist}"
     ]
+    prepare
     File.open("#{PROJECT_DIR}/.chef/provision.sh", 'w+') { |f| f.puts(script.join("\n")) }
     SSH.scp(vm, '/root/.chef', dst)
     SSH.jump(vm, "sudo bash #{dst}/.chef/provision.sh")
@@ -35,7 +36,7 @@ class ChefProvisioner
     runlist.join(',')
   end
 
-  def self.prepare(_vm)
+  def self.prepare
     manifest = YAML.safe_load(File.read(MANIFEST))
     # package cookbook
     Chef.package_cookbook

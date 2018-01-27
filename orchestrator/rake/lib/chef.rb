@@ -11,6 +11,7 @@ class Chef
       berksfile += %(\ncookbook '#{cb['cookbook']}', git:'#{cb['git']}', tag: '#{cb['tag']}')
     end
     # File.delete "#{PROJECT_DIR}/.chef/Berksfile.lock"
+    # File.delete "#{PROJECT_DIR}/.chef/Berksfile"
     File.open("#{PROJECT_DIR}/.chef/Berksfile", 'w+') { |f| f.puts(berksfile) }
   end
 
