@@ -1,3 +1,4 @@
+require 'io/console'
 require 'fileutils'
 
 # Run commands against orchestrator container
@@ -6,6 +7,8 @@ class Docker
   TF_DIR = "#{PROJECT_DIR}/.terraform".freeze
 
   def self.run(cmd)
+    rows, cols = IO.console.winsize
+    cmd = "stty columns #{cols} rows #{rows}\n#{cmd}"  
     FileUtils.mkdir_p(AWS_CACHE)
     ts = Time.now.strftime('%s.%N')
     tmpfile = "#{PROJECT_DIR}/.script-#{ts}.sh"
