@@ -15,6 +15,9 @@ class RunCmdLiveOutput
     master, slave = PTY.open
     slave.raw!
     master.raw!
+    master.sync
+    slave.sync 
+    $stdout.sync 
 
     pid = fork do 
       slave.close
@@ -23,8 +26,10 @@ class RunCmdLiveOutput
     end
     
     master.close
-    slave.each_char {|c| $stdout << c}
-    
+    begin
+      slave.each_char {|c| $stdout << c}
+    rescue Errno::EIO
+    end    
     Process.wait pid
     $?.exitstatus
   end
