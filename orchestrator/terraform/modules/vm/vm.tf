@@ -14,6 +14,7 @@ data "aws_ami" "ami" {
   }
 }
 
+variable "ami" { default = "" } 
 variable "type" { default = "t2.micro" }
 variable "private_ip" { default = "" }
 variable "net_id" {}
@@ -22,7 +23,7 @@ variable "name" {}
 variable "key_name" {}
 
 resource "aws_instance" "vm" { 
-  ami = "${data.aws_ami.ami.id}"
+  ami = "${var.ami != "" ? var.ami : data.aws_ami.ami.id}"
   associate_public_ip_address = true
   instance_type = "${var.type}"
   subnet_id = "${var.net_id}"
