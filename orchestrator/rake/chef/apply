@@ -2,5 +2,5 @@ desc('Apply chef on vm')
 task :apply do
   RakeArgvConsumer.consume(Rake::TestTask)
   vm = ARGV[0]
-  ChefProvisioner.provision vm
+  ChefProvisioner.new.provision vm
 end

@@ -10,33 +10,67 @@ require 'json'
 class ChefProvisioner
   MANIFEST = "#{PROJECT_DIR}/lab.yaml".freeze
 
-  def self.provision(vm)
+  def provision(vm)
+    prepare
+    provision_single(vm)
+  end
+
+  def provision_single(vm)
     log_level = 'info'
-    str = Time.now.strftime('%F_%T.%N')
+    str = "#{vm}-#{Time.now.strftime('%F_%T.%N')}"
     dst = "/tmp/#{str}"
     runlist = get_runlist(vm)
     script = [
-      'set -x',
+      'set -xe',
       "cd #{dst}/.chef",
       'rpm -q chef || curl -L https://www.opscode.com/chef/install.sh | bash ',
       'sudo mkdir -p /var/chef/nodes',
       '/opt/chef/bin/chef-solo -L /dev/stdout \\',
-      " -l #{log_level} -j $PWD/nodes.json --recipe-url $PWD/1.tgz -o #{runlist}"
+      " -l #{log_level} -j #{dst}/.chef/nodes.json --recipe-url #{dst}/.chef/1.tgz -o #{runlist}"
     ]
-    prepare
-    File.open("#{PROJECT_DIR}/.chef/provision.sh", 'w+') { |f| f.puts(script.join("\n")) }
+    File.open("#{PROJECT_DIR}/.chef/#{vm}-provision.sh", 'w+') { |f| f.puts(script.join("\n")) }
     SSH.scp(vm, '/root/.chef', dst)
-    SSH.jump(vm, "sudo bash #{dst}/.chef/provision.sh")
+    SSH.jump(vm, "sudo bash #{dst}/.chef/#{vm}-provision.sh")
   end
 
-  def self.get_runlist(vm)
+  def provision_all
+    LOGGER.info('Started provision')
+    start_time = Time.now
+    tty_settings = `stty -g`
+    threads = []
+    result = {}
+    SSH.vms_get.each do |vm|
+      vm_name = vm['primary']['attributes']['tags.Name']
+      func = proc { provision_single vm_name }
+      threads.push((Thread.new do
+        Thread.current[:name] = vm_name
+        Thread.current[:exit_status] = JobLiveOutput.new(name: vm_name, func: func).run
+      end))
+    end
+    threads.each do |t|
+      t.join
+      result[t[:name]] = t[:exit_status]
+    end
+    end_time = Time.now
+    `stty #{tty_settings}`
+    etime = end_time - start_time
+    etime = format('%02d:%02d:%02d', etime / 3600 % 24, etime / 60 % 60, etime % 60)
+
+    result.each_key do |k|
+      msg = "Provision failed for #{k}, exit status: #{result[k][:result]}"
+      LOGGER.error(msg) if result[k][:result].to_i > 0
+    end
+    LOGGER.info("Finished provision, elapsed time: #{etime}")
+  end
+
+  def get_runlist(vm)
     manifest = YAML.safe_load(File.read(MANIFEST))
     cfg = manifest['aws']['instances'].find { |e| e['name'] == vm }
     runlist = cfg['chef']['runlist']
     runlist.join(',')
   end
 
-  def self.prepare
+  def prepare
     manifest = YAML.safe_load(File.read(MANIFEST))
     # package cookbook
     Chef.package_cookbook

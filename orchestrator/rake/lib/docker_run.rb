@@ -8,7 +8,7 @@ class Docker
 
   def self.run(cmd)
     rows, cols = IO.console.winsize
-    cmd = "stty columns #{cols} rows #{rows}\n#{cmd}"  
+    cmd = "stty columns #{cols} rows #{rows}\n#{cmd}"
     FileUtils.mkdir_p(AWS_CACHE)
     ts = Time.now.strftime('%s.%N')
     tmpfile = "#{PROJECT_DIR}/.script-#{ts}.sh"

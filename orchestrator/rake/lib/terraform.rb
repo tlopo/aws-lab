@@ -74,16 +74,16 @@ class Terraform
     private_ip = opts[:private_ip]
     ami = opts[:ami]
     cfg = [
-      %Q[module "vm-#{name}" {],
-      %Q[  source = "./modules/vm"],
-      %Q[  environment = "${var.environment}"],
-      %Q[  net_id = "#{net_id}"],
-      %Q[  name = "#{name}"],
+      %(module "vm-#{name}" {),
+      %(  source = "./modules/vm"),
+      %(  environment = "${var.environment}"),
+      %(  net_id = "#{net_id}"),
+      %(  name = "#{name}")
     ]
-    cfg.push(%Q[  ami = "#{ami}"]) unless ami.empty?
-    cfg.push(%Q[  type = "#{type}"]) unless type.empty? 
-    cfg.push(%Q[  key_name = "#{key_name}"]) unless key_name.empty?
-    cfg.push(%Q[  private_ip = "#{private_ip}"]) unless private_ip.empty?
+    cfg.push(%(  ami = "#{ami}")) unless ami.empty?
+    cfg.push(%(  type = "#{type}")) unless type.empty?
+    cfg.push(%(  key_name = "#{key_name}")) unless key_name.empty?
+    cfg.push(%(  private_ip = "#{private_ip}")) unless private_ip.empty?
     cfg.push('}')
     cfg.join("\n")
   end

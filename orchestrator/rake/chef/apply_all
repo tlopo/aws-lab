@@ -1,0 +1,6 @@
+desc('Apply chef on all vms')
+task :apply_all do
+  RakeArgvConsumer.consume(Rake::TestTask)
+  vm = ARGV[0]
+  ChefProvisioner.new.tap{|c| c.prepare }.provision_all
+end

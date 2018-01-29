@@ -13,24 +13,23 @@ class RunCmdLiveOutput
   def run(cmd = @cmd)
     LOGGER.debug("Running [#{cmd}]")
     master, slave = PTY.open
-    slave.raw!
-    master.raw!
-    master.sync
-    slave.sync 
-    $stdout.sync 
 
-    pid = fork do 
+    %i[master slave].each { |e| binding.local_variable_get(e).tap(&:raw!).tap(&:sync) }
+    $stdout.sync
+
+    pid = fork do
       slave.close
-      $stdout.reopen master
+      $stdout.reopen(master)
       exec @cmd
     end
-    
+
     master.close
     begin
-      slave.each_char {|c| $stdout << c}
+      slave.each_char { |c| $stdout << c }
     rescue Errno::EIO
-    end    
-    Process.wait pid
-    $?.exitstatus
+      nil
+    end
+    Process.wait(pid)
+    $CHILD_STATUS.exitstatus
   end
 end

@@ -21,5 +21,6 @@ Style/MethodCallWithArgsParentheses:
   IgnoredMethods: [require, raise, include, attr_reader, refute, assert]
   Exclude: [Gemfile, Rakefile, kubeclient.gemspec]
 Security/MarshalLoad:
-  Exclude: 
+  Exclude:
+    - lib/job_live_output.rb 
     - test/**/*
