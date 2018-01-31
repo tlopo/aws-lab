@@ -29,6 +29,7 @@ resource "aws_instance" "vm" {
   subnet_id = "${var.net_id}"
   key_name = "${var.key_name}"
   private_ip = "${var.private_ip}"
+  source_dest_check = false
   tags = {
     Name = "${var.name}"
   }
