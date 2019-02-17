@@ -24,6 +24,7 @@ class SSH
     tf_state = YAML.safe_load(File.read(TF_STATE_FILE))
     tf_state['modules'].each do |m|
       next unless m['resources']
+
       m['resources'].each do |r|
         vms << r[1] if r[0] == 'aws_instance.vm'
       end

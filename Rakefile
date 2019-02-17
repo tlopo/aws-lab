@@ -6,7 +6,6 @@ require 'rake/testtask'
 LOGGER = Logger.new STDOUT
 LOGGER.level = Logger::DEBUG
 
-require "#{RAKE_DIR}/lib/run_cmd_live_output"
 require "#{RAKE_DIR}/lib/job_live_output"
 require "#{RAKE_DIR}/lib/docker_run"
 require "#{RAKE_DIR}/lib/terraform"
@@ -29,6 +28,7 @@ payload = []
 Dir.entries(RAKE_DIR).each do |f1|
   next if ['.', '..', 'lib'].include? f1
   next unless File.directory? f1
+
   payload << "namespace '#{File.basename f1}' do"
   Dir.entries("#{RAKE_DIR}/#{f1}").each do |f2|
     file = "#{RAKE_DIR}/#{f1}/#{f2}"

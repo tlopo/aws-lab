@@ -9,7 +9,7 @@ require 'json'
 # provision
 class ChefProvisioner
   MANIFEST = "#{PROJECT_DIR}/lab.yaml".freeze
-  TTY_SETTINGS = `stty -g`
+  TTY_SETTINGS = `stty -g`.freeze
 
   def provision(vm)
     prepare

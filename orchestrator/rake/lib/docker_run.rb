@@ -20,16 +20,16 @@ class Docker
       "-v #{PROJECT_DIR}/.ssh:/root/.ssh",
       "-v #{AWS_CACHE}:/root/.aws",
       "-v #{TF_DIR}:/root/terraform",
-      "-v #{tmpfile}:/tmp/#{File.basename(tmpfile)}",
+      "-v #{tmpfile}:/tmp/#{File.basename(tmpfile)}"
     ]
 
-    ENV.keys.grep(/AWS/).each {|k| docker_cmd << "-e #{k}='#{ENV[k]}'" }
+    ENV.keys.grep(/AWS/).each { |k| docker_cmd << "-e #{k}='#{ENV[k]}'" }
 
-    docker_cmd <<    IMAGE_NAME.to_s
-    docker_cmd <<   %(bash "/tmp/#{File.basename(tmpfile)}")
-  
-    result = RunCmdLiveOutput.new(docker_cmd.join(' ')).run
+    docker_cmd << IMAGE_NAME.to_s
+    docker_cmd << %(bash "/tmp/#{File.basename(tmpfile)}")
+
+    Process.wait(fork { exec docker_cmd.join ' ' })
     File.delete(tmpfile)
-    result
+    $?.exitstatus
   end
 end
