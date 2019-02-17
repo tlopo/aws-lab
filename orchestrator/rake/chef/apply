@@ -2,5 +2,6 @@ desc('Apply chef on vm')
 task :apply do
   RakeArgvConsumer.consume(Rake::TestTask)
   vm = ARGV[0]
+  raise 'vm must be specified' if vm.nil?
   ChefProvisioner.new.provision vm
 end

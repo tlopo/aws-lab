@@ -1,6 +1,13 @@
-desc('Apply chef on all vms')
-task :apply_all do
-  RakeArgvConsumer.consume(Rake::TestTask)
-  vm = ARGV[0]
-  ChefProvisioner.new.tap{|c| c.prepare }.provision_all
+manifest = YAML.safe_load File.read "#{PROJECT_DIR}/lab.yaml"
+instances = manifest['aws']['instances']
+
+instances.each do |i|
+  task "apply #{i['name']}" do 
+   ARGV << i['name'] 
+   Rake::Task['chef:apply'].invoke i['name'] 
+  end
 end
+
+
+desc('Apply chef on all vms')
+pretty_multitask apply_all: instances.map{|i| "chef:apply #{i['name']}" } 

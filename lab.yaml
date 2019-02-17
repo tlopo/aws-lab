@@ -12,7 +12,7 @@ aws:
         - Role: web-app 
       chef: 
         runlist:
-          - k8s-cb::default            
+          - grafana::default            
     - name: lab-vm-02
       private_ip: 192.168.50.6 
       type: t2.micro
@@ -20,11 +20,10 @@ aws:
         - Role: web-app 
       chef: 
         runlist:
-          - k8s-cb::default
+          - grafana::default            
 chef:
+  berks:
+    - "source 'https://supermarket.chef.io'"
+    - "cookbook 'grafana', path: './cookbooks/grafana'"
   attributes:
     foo: bar
-  berks:
-    - cookbook: k8s-cb 
-      git: https://github.com/tlopo/k8s-cb.git
-      tag: 0.0.2

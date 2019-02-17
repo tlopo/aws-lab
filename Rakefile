@@ -3,10 +3,10 @@ RAKE_DIR = File.expand_path "#{PROJECT_DIR}/orchestrator/rake"
 
 require 'logger'
 require 'rake/testtask'
+require 'pretty_multitask'
 LOGGER = Logger.new STDOUT
 LOGGER.level = Logger::DEBUG
 
-require "#{RAKE_DIR}/lib/job_live_output"
 require "#{RAKE_DIR}/lib/docker_run"
 require "#{RAKE_DIR}/lib/terraform"
 require "#{RAKE_DIR}/lib/ssh"
