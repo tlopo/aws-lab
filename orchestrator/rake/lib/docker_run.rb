@@ -6,7 +6,7 @@ class Docker
   AWS_CACHE = "#{PROJECT_DIR}/.aws".freeze
   TF_DIR = "#{PROJECT_DIR}/.terraform".freeze
 
-  def self.run(cmd)
+  def self.run(cmd, terminal = false)
     FileUtils.mkdir_p(AWS_CACHE)
     ts = Time.now.strftime('%s.%N')
     tmpfile = "#{PROJECT_DIR}/.script-#{ts}.sh"
@@ -24,6 +24,7 @@ class Docker
 
     ENV.keys.grep(/AWS/).each { |k| docker_cmd << "-e #{k}='#{ENV[k]}'" }
 
+    docker_cmd << '-t' if terminal
     docker_cmd << IMAGE_NAME.to_s
     docker_cmd << %(bash "/tmp/#{File.basename(tmpfile)}")
 

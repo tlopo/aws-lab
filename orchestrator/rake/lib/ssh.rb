@@ -41,7 +41,7 @@ class SSH
     raise "Host '#{host}' not found" if public_ip.nil?
 
     cmd = "ssh -l #{user} #{SSH_OPTS.join(' ')} #{public_ip} #{args.join(' ')}"
-    Docker.run(cmd)
+    Docker.run(cmd, true)
   end
 
   def self.scp(host, src, dst)

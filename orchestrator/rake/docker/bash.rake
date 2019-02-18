@@ -1,4 +1,4 @@
 desc('Jump o docker bash')
 task :bash do
-  Docker.run('/bin/bash')
+  Docker.run('/bin/bash', true)
 end
