@@ -21,6 +21,7 @@ variable "net_id" {}
 variable "environment" {}
 variable "name" {}
 variable "key_name" {}
+variable "tags" { default = {}  }
 
 resource "aws_instance" "vm" { 
   ami = "${var.ami != "" ? var.ami : data.aws_ami.ami.id}"
@@ -30,9 +31,7 @@ resource "aws_instance" "vm" {
   key_name = "${var.key_name}"
   private_ip = "${var.private_ip}"
   source_dest_check = false
-  tags = {
-    Name = "${var.name}"
-  }
+  tags = "${merge( var.tags, map("Name", var.name))}" 
 }
 
 output "public_ip"  { value = "${aws_instance.vm.public_ip}"}

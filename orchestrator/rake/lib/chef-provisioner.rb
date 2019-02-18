@@ -28,7 +28,7 @@ class ChefProvisioner
     ]
     File.open("#{PROJECT_DIR}/.chef/#{vm}-provision.sh", 'w+') { |f| f.puts(script.join("\n")) }
     SSH.scp(vm, '/root/.chef', dst)
-    result = SSH.jump(vm, "sudo bash #{dst}/.chef/#{vm}-provision.sh")
+    result = SSH.run(vm, "sudo bash #{dst}/.chef/#{vm}-provision.sh")
     result
   end
 

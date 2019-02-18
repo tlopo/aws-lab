@@ -9,22 +9,24 @@ aws: &aws
       private_ip: 192.168.50.5 #Optional
       type: t2.micro
       tags: 
-        - Role: web-app 
+        Role: web-app 
       chef: 
         runlist:
-          - grafana::default            
-    - name: lab-vm-02
-      private_ip: 192.168.50.6 
-      type: t2.micro
-      tags: 
-        - Role: web-app 
-      chef: 
-        runlist:
-          - grafana::default            
+          - docker::default            
+          - grafana::default
+#    - name: lab-vm-02
+#      private_ip: 192.168.50.6 
+#      type: t2.micro
+#      tags: 
+#        Role: web-app 
+#      chef: 
+#        runlist:
+#          - docker::default            
 chef:
   berks:
     - "source 'https://supermarket.chef.io'"
     - "cookbook 'grafana', path: './cookbooks/grafana'"
+    - "cookbook 'docker', path: './cookbooks/docker'"
   attributes:
     aws: *aws
     foo: bar

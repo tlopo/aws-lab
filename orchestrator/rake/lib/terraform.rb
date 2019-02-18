@@ -35,10 +35,11 @@ class Terraform
     MANIFEST['aws']['instances'].each do |i|
       vm = get_vm_cfg(
         net_id: '${module.net.net_id}',
-        type: (i['type']).to_s,
-        name: (i['name']).to_s,
-        ami: (i['ami']).to_s,
-        private_ip: (i['private_ip']).to_s,
+        type: i['type'],
+        name: i['name'],
+        ami: i['ami'],
+        private_ip: i['private_ip'],
+        tags: i['tags'],
         key_name: key_name
       )
       cfg = "#{cfg}\n#{vm}"
@@ -71,19 +72,23 @@ class Terraform
     name = opts[:name]
     key_name = opts[:key_name]
     private_ip = opts[:private_ip]
-    ami = opts[:ami]
+    ami = opts[:ami] || ''
+    tags = opts[:tags]
     cfg = [
-      %(module "vm-#{name}" {),
-      %(  source = "./modules/vm"),
-      %(  environment = "${var.environment}"),
-      %(  net_id = "#{net_id}"),
-      %(  name = "#{name}")
+      %Q[module "vm-#{name}" {],
+      '  source = "./modules/vm"',
+      '  environment = "${var.environment}"',
+      %Q[  net_id = "#{net_id}"],
+      %Q[  name = "#{name}"]
     ]
-    cfg.push(%(  ami = "#{ami}")) unless ami.empty?
-    cfg.push(%(  type = "#{type}")) unless type.empty?
-    cfg.push(%(  key_name = "#{key_name}")) unless key_name.empty?
-    cfg.push(%(  private_ip = "#{private_ip}")) unless private_ip.empty?
-    cfg.push('}')
-    cfg.join("\n")
+    tags = tags.map { |k, v| %Q[    #{k} = "#{v}"] }.join "\n"
+
+    cfg << %Q[  ami = "#{ami}"] unless ami.empty?
+    cfg << %Q[  type = "#{type}"] unless type.empty?
+    cfg << %Q[  key_name = "#{key_name}"] unless key_name.empty?
+    cfg << %Q[  private_ip = "#{private_ip}"] unless private_ip.empty?
+    cfg << "  tags = {\n#{tags}\n  }" unless tags.empty?
+    cfg << '}'
+    cfg.join "\n"
   end
 end

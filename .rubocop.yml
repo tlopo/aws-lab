@@ -18,7 +18,14 @@ Metrics/ModuleLength:
   Enabled: false
 Style/SpecialGlobalVars:
   Enabled: false
+Style/PercentLiteralDelimiters:
+  Enabled: false
+Style/BarePercentLiterals:
+  Enabled: false
 Naming/UncommunicativeMethodParamName:
+  Exclude:
+    - orchestrator/rake/lib/chef-provisioner.rb
+Naming/HeredocDelimiterNaming:
   Enabled: false
 Security/MarshalLoad:
   Exclude:

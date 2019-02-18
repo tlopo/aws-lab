@@ -32,7 +32,7 @@ class SSH
     vms
   end
 
-  def self.jump(*args)
+  def self.ssh_cmd(*args)
     user = 'ec2-user'
     host = args[0]
     args.shift
@@ -40,7 +40,16 @@ class SSH
 
     raise "Host '#{host}' not found" if public_ip.nil?
 
-    cmd = "ssh -l #{user} #{SSH_OPTS.join(' ')} #{public_ip} #{args.join(' ')}"
+    "ssh -l #{user} #{SSH_OPTS.join(' ')} #{public_ip} #{args.join(' ')}"
+  end
+
+  def self.run(*args)
+    cmd = ssh_cmd(*args)
+    Docker.run(cmd)
+  end
+
+  def self.jump(*args)
+    cmd = ssh_cmd(*args)
     Docker.run(cmd, true)
   end
 
