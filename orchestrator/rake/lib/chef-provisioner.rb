@@ -8,8 +8,6 @@ require 'json'
 # scp cookbook
 # provision
 class ChefProvisioner
-  MANIFEST = "#{PROJECT_DIR}/lab.yaml".freeze
-
   def provision(vm)
     prepare
     provision_single(vm)
@@ -35,20 +33,18 @@ class ChefProvisioner
   end
 
   def get_runlist(vm)
-    manifest = YAML.safe_load(File.read(MANIFEST))
-    cfg = manifest['aws']['instances'].find { |e| e['name'] == vm }
+    cfg = MANIFEST['aws']['instances'].find { |e| e['name'] == vm }
     runlist = cfg['chef']['runlist']
     runlist.join(',')
   end
 
   def prepare
-    manifest = YAML.safe_load(File.read(MANIFEST))
     # package cookbook
     Chef.package_cookbook
 
     # create nodes.json
     File.open("#{PROJECT_DIR}/.chef/nodes.json", 'w+') do |f|
-      f.puts(manifest['chef']['attributes'].to_json)
+      f.puts(MANIFEST['chef']['attributes'].to_json)
     end
   end
 end

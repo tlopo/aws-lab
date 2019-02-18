@@ -16,6 +16,7 @@ require "#{RAKE_DIR}/lib/rake_argv_consumer"
 
 DOCKERFILE = File.expand_path "#{RAKE_DIR}/../docker/Dockerfile"
 IMAGE_NAME = 'aws-lab-orchestrator'.freeze
+MANIFEST = YAML.safe_load(File.read("#{PROJECT_DIR}/lab.yaml"), [], [], true)
 
 # ChefProvisioner.provision 'lab-vm-01'; exit 1
 

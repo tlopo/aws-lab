@@ -1,5 +1,4 @@
-manifest = YAML.safe_load File.read "#{PROJECT_DIR}/lab.yaml"
-instances = manifest['aws']['instances']
+instances = MANIFEST['aws']['instances']
 
 instances.each do |i|
   task "apply #{i['name']}" do 

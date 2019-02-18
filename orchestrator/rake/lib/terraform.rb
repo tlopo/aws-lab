@@ -4,7 +4,6 @@ require 'English'
 # Terraform helper
 class Terraform
   TF_DIR = "#{PROJECT_DIR}/.terraform".freeze
-  MANIFEST = YAML.safe_load(File.read("#{PROJECT_DIR}/lab.yaml"))
   def self.create_config
     FileUtils.mkdir_p(TF_DIR.to_s)
     FileUtils.rm_rf("#{TF_DIR}/modules")

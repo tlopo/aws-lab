@@ -1,5 +1,5 @@
 environment: tiago-dev
-aws: 
+aws: &aws 
   region: us-east-1 
   vpc:
     name: lab
@@ -26,4 +26,5 @@ chef:
     - "source 'https://supermarket.chef.io'"
     - "cookbook 'grafana', path: './cookbooks/grafana'"
   attributes:
+    aws: *aws
     foo: bar
